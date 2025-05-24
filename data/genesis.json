@@ -1,0 +1,27 @@
+{
+    "config": {
+        "chainId": 1337,
+        "muirglacierblock": 0,
+        "londonBlock": 2592800,
+        "zeroBaseFee": true,
+        "shanghaiTime": 1737394200,
+        "ibft2": {
+            "blockperiodseconds": 2,
+            "epochlength": 30000,
+            "requesttimeoutseconds": 10
+        },
+        "qbft": {
+            "blockperiodseconds": 5,
+            "epochlength": 30000,
+            "requesttimeoutseconds": 10
+        }
+    },
+    "nonce": "0x0",
+    "timestamp": "0x58ee40ba",
+    "extraData": "0xf87aa00000000000000000000000000000000000000000000000000000000000000000f854946b45f213f53d31e2f125b1a7a0647e966314a581943d6ab39222b6fc9a3b0838ff43ac6b989eaec74094fc13c289e22249d8f3c949ed61865f309fc4be0b943017ae288af105620c148f4973e8208b8077175fc080c0",
+    "gasLimit": "0x1fffffffffffff",
+    "difficulty": "0x1",
+    "mixHash": "0x63746963616c2d6279706173732d746573742d636861696e",
+    "coinbase": "0x0000000000000000000000000000000000000000",
+    "alloc": {}
+}

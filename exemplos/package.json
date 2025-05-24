@@ -4,7 +4,7 @@
   "description": "Exemplo de chamada dos contratos",
   "main": "index.js",
   "scripts": {
-    "example": "npx hardhat run --network besu ./abertura.ts"
+    "example": "npx hardhat run --network besu ./consulta_saldo.ts"
   },
   "author": "",
   "license": "MIT",
