@@ -6,72 +6,45 @@ import { formatEther } from 'ethers/lib/utils';
 let port = "";
 let aux = 4;
 
-async function consultarSaldo(provider: JsonRpcProvider, index: number) {
+async function consultarSaldo(provider: JsonRpcProvider, endereco: string) {
   try {
-    // Pega o primeiro endereço (ajuste se quiser outro)
-    const endereco = jsonData[index+1].endereco;
-
-    // Consulta saldo da conta
     const saldo = await provider.getBalance(endereco);
-
-    // Formata o saldo em ETH
     const saldoEmETH = formatEther(saldo);
-
-    //console.log(`Saldo da conta ${endereco}: ${saldoEmETH} ETH`);
+    // console.log(`Saldo da conta ${endereco}: ${saldoEmETH} ETH (${saldo.toString()} Wei)`);
   } catch (error) {
-    console.error('Erro ao consultar saldo:', error);
+    console.error(`Erro ao consultar saldo de ${endereco}:`, error);
   }
 }
 
-// Caminho do arquivo JSON com as carteiras (endereços)
-const filePath = path.join(__dirname, 'carteiras_geradas.json');
+// Caminho dos arquivos
+const filePath = path.join(__dirname, 'carteiras_geradas.ndjson');
 const portPath = path.join(__dirname, '../data/besu.ports');
 
-// Lê o arquivo e parseia JSON
-const jsonData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+// Lê porta
 const portData = fs.readFileSync(portPath, 'utf-8');
-
 const portLine = portData.split('\n').find((line) => line.startsWith('json-rpc='));
 if (portLine) {
   port = portLine.split('=')[1].trim();
+} else {
+  console.error('Porta não encontrada no arquivo besu.ports');
+  process.exit(1);
 }
 
-// URL do seu nó local Besu
+// Cria provider
 const providerUrl = `http://localhost:${port}`;
 const provider = new JsonRpcProvider(providerUrl);
 
-// Vai quebrar assim
-for(let i=1; i<=10; i++){
+// Lê e processa NDJSON
+const linhas = fs.readFileSync(filePath, 'utf-8').trim().split('\n');
+const carteiras = linhas.map(linha => JSON.parse(linha));
+
+// consultarSaldo(provider, carteiras[0].endereco);
+
+for(let i = 1; i <= 10; i++) {
   console.time(`Tempo do loop externo i=${aux}`);
-  for (let j = 0; j < aux; j++) {
-    consultarSaldo(provider,j);
+  for (let j = 0; j < aux && j < carteiras.length; j++) {
+    consultarSaldo(provider, carteiras[j].endereco);
   }
   console.timeEnd(`Tempo do loop externo i=${aux}`);
   aux *= 4;
 }
-
-/* Assim ele loopa sem erro
-for(let i=1; i<=2; i++){
-  console.time(`Tempo do loop externo i=${aux}`);
-  for (let j = 0; j < aux; j++) {
-    consultarSaldo(provider,j);
-  }
-  console.timeEnd(`Tempo do loop externo i=${aux}`);
-  aux *= 4;
-} */
-
-/* Para testar 64 repetições só se testar elas direto
-  console.time(`Tempo do loop externo i=${aux}`);
-  for (let j = 0; j < 64; j++) {
-    consultarSaldo(provider,j);
-  }
-  console.timeEnd(`Tempo do loop externo i=${aux}`);
-} */
-
-/* Limite de repetições
-  console.time(`Tempo do loop externo i=${aux}`);
-  for (let j = 0; j < 80; j++) {
-    consultarSaldo(provider,j);
-  }
-  console.timeEnd(`Tempo do loop externo i=${aux}`);
-} */
