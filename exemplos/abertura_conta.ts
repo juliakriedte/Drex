@@ -15,6 +15,8 @@ console.time("Tempo total");
 
 while (aux <= LIMITE_MAX) {
     genesis.alloc = {};
+    fs.writeFileSync(outputFile, '', 'utf8');
+    
     console.time(`Batch de ${aux} carteiras`);
     
     const batchCarteiras = [];
